@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../generatorSqlmapCustom/generatorSqlmapCustom.iml" filepath="$PROJECT_DIR$/../generatorSqlmapCustom/generatorSqlmapCustom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goods.iml" filepath="$PROJECT_DIR$/goods.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mybatis1222/mybatis1222.iml" filepath="$PROJECT_DIR$/../mybatis1222/mybatis1222.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../springmvc_mybatis1208/springmvc_mybatis1208.iml" filepath="$PROJECT_DIR$/../springmvc_mybatis1208/springmvc_mybatis1208.iml" />
+    </modules>
+  </component>
+</project>

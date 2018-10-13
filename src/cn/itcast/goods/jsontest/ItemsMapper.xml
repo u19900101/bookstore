@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.goods.jsontest.ItemsMapper" >
+  <resultMap id="BaseResultMap" type="cn.itcast.goods.jsontest.Items" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="t_name" property="t_name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="REAL" />
+    <result column="pic" property="pic" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.itcast.goods.jsontest.Items" extends="BaseResultMap" >
+    <result column="detail" property="detail" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, t_name, price, pic, createtime
+  </sql>
+  <sql id="Blob_Column_List" >
+    detail
+  </sql>
+
+
+
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from items
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from items
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="cn.itcast.goods.jsontest.Items" >
+    insert into items (id, t_name, price,
+      pic, createtime, detail
+      )
+    values (#{id,jdbcType=INTEGER}, #{t_name,jdbcType=VARCHAR}, #{price,jdbcType=REAL},
+      #{pic,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{detail,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.itcast.goods.jsontest.Items" >
+    insert into items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="t_name != null" >
+        t_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="pic != null" >
+        pic,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="detail != null" >
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="t_name != null" >
+        #{t_name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=REAL},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="cn.itcast.goods.jsontest.Items" >
+    update items
+    <set >
+      <if test="t_name != null" >
+        t_name = #{t_name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="pic != null" >
+        pic = #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.itcast.goods.jsontest.Items" >
+    update items
+    set t_name = #{t_name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      pic = #{pic,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      detail = #{detail,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.itcast.goods.jsontest.Items" >
+    update items
+    set t_name = #{t_name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      pic = #{pic,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+
+  <!-- 定义商品查询的sql片段，就是商品查询条件 -->
+  <sql id="query_items_where">
+    <!-- 使用动态sql，通过if判断，满足条件进行sql拼接 -->
+    <!-- 商品查询条件通过ItemsQueryVo包装对象 中itemsCustom属性传递 -->
+    <if test="itemsCustom!=null">
+      <if test="itemsCustom.name!=null and itemsCustom.name!=''">
+        items.name LIKE '%${itemsCustom.name}%'
+      </if>
+    </if>
+
+  </sql>
+
+  <!-- 商品列表查询 -->
+  <!-- parameterType传入包装对象(包装了查询条件)
+      resultType建议使用扩展对象
+   -->
+
+  <select id="findItemsList" parameterType="cn.itcast.goods.jsontest.ItemsQueryVo"
+          resultType="cn.itcast.goods.jsontest.ItemsCustom">
+    SELECT items.* FROM items
+    <where>
+      <include refid="query_items_where"></include>
+    </where>
+  </select>
+
+
+</mapper>

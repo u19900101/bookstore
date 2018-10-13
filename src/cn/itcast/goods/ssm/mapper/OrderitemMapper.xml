@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.goods.ssm.mapper.OrderitemMapper" >
+
+
+  <select id="selectOrderitemByOid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+     SELECT *FROM orderitem
+     WHERE oid=#{orderitemid,jdbcType=CHAR}
+  </select>
+
+
+
+
+
+
+  <resultMap id="BaseResultMap" type="cn.itcast.goods.ssm.po.Orderitem" >
+    <id column="orderItemId" property="orderitemid" jdbcType="CHAR" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="subtotal" property="subtotal" jdbcType="DECIMAL" />
+    <result column="bid" property="bid" jdbcType="CHAR" />
+    <result column="bname" property="bname" jdbcType="VARCHAR" />
+    <result column="currPrice" property="currprice" jdbcType="DECIMAL" />
+    <result column="image_b" property="imageB" jdbcType="VARCHAR" />
+    <result column="oid" property="oid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    orderItemId, quantity, subtotal, bid, bname, currPrice, image_b, oid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.itcast.goods.ssm.po.OrderitemExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orderitem
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderitem
+    where orderItemId = #{orderitemid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from orderitem
+    where orderItemId = #{orderitemid,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.itcast.goods.ssm.po.OrderitemExample" >
+    delete from orderitem
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.itcast.goods.ssm.po.Orderitem" >
+    insert into orderitem (orderItemId, quantity, subtotal, 
+      bid, bname, currPrice, 
+      image_b, oid)
+    values (#{orderitemid,jdbcType=CHAR}, #{quantity,jdbcType=INTEGER}, #{subtotal,jdbcType=DECIMAL}, 
+      #{bid,jdbcType=CHAR}, #{bname,jdbcType=VARCHAR}, #{currprice,jdbcType=DECIMAL}, 
+      #{imageB,jdbcType=VARCHAR}, #{oid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.itcast.goods.ssm.po.Orderitem" >
+    insert into orderitem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderitemid != null" >
+        orderItemId,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="subtotal != null" >
+        subtotal,
+      </if>
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="bname != null" >
+        bname,
+      </if>
+      <if test="currprice != null" >
+        currPrice,
+      </if>
+      <if test="imageB != null" >
+        image_b,
+      </if>
+      <if test="oid != null" >
+        oid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderitemid != null" >
+        #{orderitemid,jdbcType=CHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null" >
+        #{subtotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bid != null" >
+        #{bid,jdbcType=CHAR},
+      </if>
+      <if test="bname != null" >
+        #{bname,jdbcType=VARCHAR},
+      </if>
+      <if test="currprice != null" >
+        #{currprice,jdbcType=DECIMAL},
+      </if>
+      <if test="imageB != null" >
+        #{imageB,jdbcType=VARCHAR},
+      </if>
+      <if test="oid != null" >
+        #{oid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.itcast.goods.ssm.po.OrderitemExample" resultType="java.lang.Integer" >
+    select count(*) from orderitem
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update orderitem
+    <set >
+      <if test="record.orderitemid != null" >
+        orderItemId = #{record.orderitemid,jdbcType=CHAR},
+      </if>
+      <if test="record.quantity != null" >
+        quantity = #{record.quantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.subtotal != null" >
+        subtotal = #{record.subtotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bid != null" >
+        bid = #{record.bid,jdbcType=CHAR},
+      </if>
+      <if test="record.bname != null" >
+        bname = #{record.bname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currprice != null" >
+        currPrice = #{record.currprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.imageB != null" >
+        image_b = #{record.imageB,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oid != null" >
+        oid = #{record.oid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update orderitem
+    set orderItemId = #{record.orderitemid,jdbcType=CHAR},
+      quantity = #{record.quantity,jdbcType=INTEGER},
+      subtotal = #{record.subtotal,jdbcType=DECIMAL},
+      bid = #{record.bid,jdbcType=CHAR},
+      bname = #{record.bname,jdbcType=VARCHAR},
+      currPrice = #{record.currprice,jdbcType=DECIMAL},
+      image_b = #{record.imageB,jdbcType=VARCHAR},
+      oid = #{record.oid,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.itcast.goods.ssm.po.Orderitem" >
+    update orderitem
+    <set >
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null" >
+        subtotal = #{subtotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bid != null" >
+        bid = #{bid,jdbcType=CHAR},
+      </if>
+      <if test="bname != null" >
+        bname = #{bname,jdbcType=VARCHAR},
+      </if>
+      <if test="currprice != null" >
+        currPrice = #{currprice,jdbcType=DECIMAL},
+      </if>
+      <if test="imageB != null" >
+        image_b = #{imageB,jdbcType=VARCHAR},
+      </if>
+      <if test="oid != null" >
+        oid = #{oid,jdbcType=CHAR},
+      </if>
+    </set>
+    where orderItemId = #{orderitemid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.itcast.goods.ssm.po.Orderitem" >
+    update orderitem
+    set quantity = #{quantity,jdbcType=INTEGER},
+      subtotal = #{subtotal,jdbcType=DECIMAL},
+      bid = #{bid,jdbcType=CHAR},
+      bname = #{bname,jdbcType=VARCHAR},
+      currPrice = #{currprice,jdbcType=DECIMAL},
+      image_b = #{imageB,jdbcType=VARCHAR},
+      oid = #{oid,jdbcType=CHAR}
+    where orderItemId = #{orderitemid,jdbcType=CHAR}
+  </update>
+</mapper>

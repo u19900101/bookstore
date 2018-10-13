@@ -1,0 +1,116 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+		<!--非注解的开发-->
+	<!-- 配置Handler -->
+	<!--<bean id="findAll" name="/findAll.action" class="cn.itcast.goods.controller.CategoryController" />-->
+
+	<!-- 处理器映射器 将bean的name作为url进行查找 ，需要在配置Handler时指定beanname（就是url）所有的映射器都实现 HandlerMapping接口。-->
+	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
+
+	<!-- 处理器适配器 所有处理器适配器都实现 HandlerAdapter接口 -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+	<!--注解的开发-->
+	<!-- 可以扫描controller、service、...这里让扫描controller，指定controller的包-->
+	<context:component-scan base-package="cn.itcast.goods.ssm"/>
+	<context:component-scan base-package="cn.itcast.goods.jsontest"/>
+
+
+	<!--&lt;!&ndash;注解映射器 &ndash;&gt;
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	&lt;!&ndash;注解适配器 &ndash;&gt;
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+-->
+	<!-- 使用 mvc:annotation-driven代替上边注解映射器和注解适配器配置
+        mvc:annotation-driven默认加载很多的参数绑定方法，
+        比如json转换解析器就默认加载了，如果使用mvc:annotation-driven不用配置上边的RequestMappingHandlerMapping和RequestMappingHandlerAdapter
+        实际开发时使用mvc:annotation-driven
+         -->
+	<!-- <mvc:annotation-driven></mvc:annotation-driven>-->
+	<!-- 视图解析器解析jsp解析，默认使用jstl标签，classpath下的得有jstl的包-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置jsp路径的前缀 -->
+		<property name="prefix" value="/jsps/"/>
+		<!-- 配置jsp路径的后缀 -->
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+	<!--校验器注入到适配器-->
+	<mvc:annotation-driven validator="validator"></mvc:annotation-driven>
+	<!-- 校验器 -->
+	<bean id="validator"
+		  class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<!-- hibernate校验器-->
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<!-- 指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认使用classpath下的ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+	<!-- 校验错误信息配置文件 -->
+	<bean id="messageSource"
+		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 资源文件名-->
+		<property name="basenames" value="classpath:LoginValidationMessages"></property>
+			<!--<list>
+				<value>classpath:LoginValidationMessages</value>
+			</list>-->
+			<!--<import resource="LoginValidationMessages.properties"/>-->
+
+		<!-- 资源文件编码格式 -->
+		<property name="fileEncodings" value="utf-8" />
+		<!-- 对资源文件内容缓存时间，单位秒 -->
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+
+	<!--拦截器 -->
+	<mvc:interceptors>
+		<!--多个拦截器,顺序执行  登陆认证拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="cn.itcast.goods.ssm.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+		<!--<mvc:interceptor>
+			&lt;!&ndash; /**表示所有url包括子url路径 &ndash;&gt;
+			<mvc:mapping path="/**"/>
+			<bean class="cn.itcast.ssm.interceptor.HandlerInterceptor1"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="cn.itcast.ssm.interceptor.HandlerInterceptor2"></bean>
+		</mvc:interceptor>-->
+	</mvc:interceptors>
+
+	<!--配置json转换器-->
+
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为5MB -->
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>
+
+</beans>
